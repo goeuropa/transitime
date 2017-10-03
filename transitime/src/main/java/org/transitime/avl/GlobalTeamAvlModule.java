@@ -166,8 +166,6 @@ in.close();
 fos.flush();
 fos.close();
 
-Thread.sleep(3000);
-
 File fXmlFile = new File(path);
 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -225,6 +223,7 @@ for (int temp = 0; temp < nList.getLength(); temp++) {
 			avlReports.add(avlReport);
 	}
 }
+Thread.sleep(60000*5);
 	} catch (Exception e) {
 e.printStackTrace();
 	}
