@@ -223,7 +223,7 @@ for (int temp = 0; temp < nList.getLength(); temp++) {
 			avlReports.add(avlReport);
 	}
 }
-Thread.sleep(60000*5);
+Thread.sleep(1000*5);
 	} catch (Exception e) {
 e.printStackTrace();
 	}
