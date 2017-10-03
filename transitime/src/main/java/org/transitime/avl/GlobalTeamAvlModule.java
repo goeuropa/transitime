@@ -213,7 +213,7 @@ for (int temp = 0; temp < nList.getLength(); temp++) {
 						Date timestamp=dateformater.parse(time.replace( "T" , " " ));
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(timestamp);
-		cal.add(Calendar.HOUR_OF_DAY, 2);
+		//cal.add(Calendar.HOUR_OF_DAY, 2);
 		//System.out.println("data:"+vehicleId+ timestamp.getTime()+ latitude+longitude+ heading+ speed);
 
 			AvlReport avlReport =
