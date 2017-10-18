@@ -14,13 +14,15 @@ import java.util.*;
 import java.net.URL;
 import java.net.URLConnection;
 import org.json.JSONTokener;
+import org.transitime.configData.AvlConfig;
 
 public class TraccarAvlModule extends PollUrlAvlModule {
 
 	private static String avlURL="http://jsonplaceholder.typicode.com/posts/1";
 //      private static String avlURL="http://www.rozklady.kiedybus.pl/kombus/dane.json";
 
-        public static String positionsURL="http://iplaner.pl:8081/api/positions/";
+				AvlConfig avlConfig = new AvlConfig();
+        public static String positionsURL=avlConfig.avlPositionsUrl();//"http://iplaner.pl:8081/api/positions/";
 
         public TraccarAvlModule(String agencyId) {
                 super(agencyId);
