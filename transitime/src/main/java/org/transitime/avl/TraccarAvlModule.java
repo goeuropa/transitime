@@ -25,9 +25,9 @@ public class TraccarAvlModule extends PollUrlAvlModule {
         public static String positionsURL="";//"http://iplaner.pl:8081/api/positions/";
 
         public TraccarAvlModule(String agencyId) {
+								super(agencyId);
 								AvlConfig avlConfig = new AvlConfig();
 								this.positionsURL = avlConfig.avlPositionsUrl();
-                super(agencyId);
         }
 
         @Override
