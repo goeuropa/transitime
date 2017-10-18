@@ -21,10 +21,12 @@ public class TraccarAvlModule extends PollUrlAvlModule {
 	private static String avlURL="http://jsonplaceholder.typicode.com/posts/1";
 //      private static String avlURL="http://www.rozklady.kiedybus.pl/kombus/dane.json";
 
-				AvlConfig avlConfig = new AvlConfig();
-        public static String positionsURL=avlConfig.avlPositionsUrl();//"http://iplaner.pl:8081/api/positions/";
+
+        public static String positionsURL="";//"http://iplaner.pl:8081/api/positions/";
 
         public TraccarAvlModule(String agencyId) {
+								AvlConfig avlConfig = new AvlConfig();
+								this.positionsURL = avlConfig.avlPositionsUrl();
                 super(agencyId);
         }
 
