@@ -59,16 +59,21 @@
   String allowableEarly = request.getParameter("allowableEarly");
   String allowableLate = request.getParameter("allowableLate");
 %>
-  String chartTitle = '<fmt:message key="div.scheduleroutr" />'+"\\n"
-    + allowableEarly + '<fmt:message key="div.minearly" />' + allowableLate + '<fmt:message key="div.minlate" />'+'\\n'
+  <fmt:message key="div.scheduleroutr" var="scheduleroutr"/>
+  <fmt:message key="div.minearly" var="minearly"/>
+  <fmt:message key="div.minlate" var="minlate"/>
+  <fmt:message key="div.for" />
+  <fmt:message key="div.day" />
+  <%
+  String chartTitle = scheduleroutr+"\\n"
+    + allowableEarly + minearly + allowableLate + minlate +'\\n'
+	+  request.getParameter("beginDate")
 
-	+ <%= request.getParameter("beginDate") %>
+	+ for + numDays + day + (numDays.equals("1") ? "" : "s");
 
-	+ '<fmt:message key="div.for" />' + numDays + '<fmt:message key="div.day" />' + (numDays.equals("1") ? "" : "s");
-<%
   String beginTime = request.getParameter("beginTime");
   String endTime = request.getParameter("endTime");
-%>
+
   if (!beginTime.isEmpty() || !endTime.isEmpty()) {
 	  if (beginTime.isEmpty())
 		  beginTime = "00:00"; // default value
@@ -76,7 +81,7 @@
 		  endTime = "24:00";   // default value
 	  chartTitle += ", " + beginTime + " to " + endTime;
   }
-
+%>
 
 
 <script type="text/javascript">
