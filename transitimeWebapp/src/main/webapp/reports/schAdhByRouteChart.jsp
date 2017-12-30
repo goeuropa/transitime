@@ -66,7 +66,7 @@
   <fmt:message key="div.day" var="day"/>
   <%
   String chartTitle = scheduleroutr+"\\n"
-    + allowableEarly + minearly + allowableLate + minlate +'\\n'
+    + allowableEarly + minearly + allowableLate + minlate +"\\n"
 	+  request.getParameter("beginDate")
 
 	+ for1 + numDays + day + (numDays.equals("1") ? "" : "s");
