@@ -62,14 +62,14 @@
   <fmt:message key="div.scheduleroutr" var="scheduleroutr"/>
   <fmt:message key="div.minearly" var="minearly"/>
   <fmt:message key="div.minlate" var="minlate"/>
-  <fmt:message key="div.for" />
-  <fmt:message key="div.day" />
+  <fmt:message key="div.for" var="for1"/>
+  <fmt:message key="div.day" var="day"/>
   <%
   String chartTitle = scheduleroutr+"\\n"
     + allowableEarly + minearly + allowableLate + minlate +'\\n'
 	+  request.getParameter("beginDate")
 
-	+ for + numDays + day + (numDays.equals("1") ? "" : "s");
+	+ for1 + numDays + day + (numDays.equals("1") ? "" : "s");
 
   String beginTime = request.getParameter("beginTime");
   String endTime = request.getParameter("endTime");
