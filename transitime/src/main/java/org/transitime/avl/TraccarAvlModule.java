@@ -101,7 +101,7 @@ float speed = (float)entry.getDouble("speed");
                                                         Date timestamp=dateformater.parse(time.replace( "T" , " " ));
 Calendar cal = new GregorianCalendar();
     cal.setTime(timestamp);
-    cal.add(Calendar.HOUR_OF_DAY, 2);
+    //cal.add(Calendar.HOUR_OF_DAY, 2); //plus 2 hours
 //System.out.println("data:"+vehicleId+ timestamp.getTime()+ latitude+longitude+ heading+ speed);
 
 						if ( ( deviceId.equals("10") == true ) || ( deviceId.equals("11") == true ) || ( deviceId.equals("12") == true ) || ( deviceId.equals("4") == true ) ){
