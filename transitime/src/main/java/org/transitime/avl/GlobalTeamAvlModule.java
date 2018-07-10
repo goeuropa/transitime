@@ -55,8 +55,7 @@ public class GlobalTeamAvlModule extends PollUrlAvlModule {
 
                 return avlURL;
         }
-
-				/**
+        /**
 				 * Execute a bash command. We can handle complex bash commands including
 				 * multiple executions (; | && ||), quotes, expansions ($), escapes (\), e.g.:
 				 *     "cd /abc/def; mv ghi 'older ghi '$(whoami)"
