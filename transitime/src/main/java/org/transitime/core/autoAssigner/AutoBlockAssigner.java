@@ -84,7 +84,7 @@ public class AutoBlockAssigner {
 	private static BooleanConfigValue autoAssignerEnabled =
 			new BooleanConfigValue(
 					"transitime.autoBlockAssigner.autoAssignerEnabled",
-					false,
+					true,
 					"Set to true to enable the auto assignment feature where "
 					+ "the system tries to assign vehicle to an available block");
 
@@ -102,7 +102,7 @@ public class AutoBlockAssigner {
 	private static DoubleConfigValue minDistanceFromCurrentReport =
 			new DoubleConfigValue(
 					"transitime.autoBlockAssigner.minDistanceFromCurrentReport",
-					100.0, 
+					100.0,
 					"AutoBlockAssigner looks at two AVL reports to match "
 					+ "vehicle. This parameter specifies how far away those "
 					+ "AVL reports need to be sure that the vehicle really "
