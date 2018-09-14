@@ -102,7 +102,7 @@ public class AutoBlockAssigner {
 	private static DoubleConfigValue minDistanceFromCurrentReport =
 			new DoubleConfigValue(
 					"transitime.autoBlockAssigner.minDistanceFromCurrentReport",
-					100.0,
+					20.0,
 					"AutoBlockAssigner looks at two AVL reports to match "
 					+ "vehicle. This parameter specifies how far away those "
 					+ "AVL reports need to be sure that the vehicle really "
