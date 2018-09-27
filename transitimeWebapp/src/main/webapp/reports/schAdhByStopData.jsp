@@ -13,8 +13,8 @@
        allowableEarlyMinutes - how early vehicle can be and still be OK.  Decimal format OK. 
        allowableLateMinutes - how early vehicle can be and still be OK. Decimal format OK.
 --%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ page import="org.transitime.reports.GenericJsonQuery" %>
 <%@ page import="org.transitime.reports.SqlUtils" %>
 <%
