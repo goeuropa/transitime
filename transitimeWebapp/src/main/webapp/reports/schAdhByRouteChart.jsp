@@ -59,7 +59,8 @@
   String allowableEarly = request.getParameter("allowableEarly");
   String allowableLate = request.getParameter("allowableLate");
 %>
-  <fmt:message key="div.scheduleroutr" var="scheduleroutr"/>
+  <fmt:message key="div.scheduleroutr" var="scheduleroutr2"/>
+  <c:set var="scheduleroutr" value="${scheduleroutr2}"/>
   <fmt:message key="div.minearly" var="minearly"/>
   <fmt:message key="div.minlate" var="minlate"/>
   <fmt:message key="div.for" var="for1"/>
