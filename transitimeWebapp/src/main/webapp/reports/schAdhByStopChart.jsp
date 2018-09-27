@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <%@ page import="org.transitime.utils.web.WebUtils" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -43,8 +43,8 @@
   <!--  Needed for google charts -->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title><fmt:message key="div.schadh" /></title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title><fmt:message key="div.scheduleadherence2" /></title>
 </head>
 <body>
   <%@include file="/template/header.jsp" %>
@@ -58,7 +58,7 @@
 </body>
 
 <script type="text/javascript">
-<%
+
 
   function drawChart(directionId, divId, dataTable, numberOfStops) {
       // Need to set height of the chart div
@@ -68,7 +68,7 @@
       $("#" + divId).height(chartDivHeight);
 
         var options = {
-          title: '<fmt:message key="div.ddirection" />' + ': ' + directionId,
+          title: 'Direction: ' + directionId,
           titleTextStyle: {
         	 fontSize: 22,
         	 bold: false
@@ -123,10 +123,10 @@
   function createDataTableAndDrawChartForDirection(stopsData) {
 	  // Initialize dataArray with the column info
 	  var dataArray = [[
-	                  '<fmt:message key="div.dstop" />',
-	                  '<fmt:message key="div.clate" />',    {role: 'style'}, { role: 'tooltip'}, { role: 'annotation'},
-	                  '<fmt:message key="div.contime" />', {role: 'style'}, { role: 'tooltip'}, { role: 'annotation'},
-	                  '<fmt:message key="div.cearly" />',   {role: 'style'}, { role: 'tooltip'}, { role: 'annotation'}
+	                  'Stop',
+	                  'Late',    {role: 'style'}, { role: 'tooltip'}, { role: 'annotation'},
+	                  'On Time', {role: 'style'}, { role: 'tooltip'}, { role: 'annotation'},
+	                  'Early',   {role: 'style'}, { role: 'tooltip'}, { role: 'annotation'}
 	                  ]];
 
 	  // Add data for each route to the dataArray
@@ -142,15 +142,15 @@
 		             stop.stop_name + ' ',
 		             latePercent,
 		             	'opacity: 1.0',
-		             	'<fmt:message key="div.clate" />: ' + stop.late + ' <fmt:message key="div.coutof" /> ' + stop.total + ' <fmt:message key="div.ctimes" />',
+		             	'Late: ' + stop.late + ' out of ' + stop.total + ' times',
 		             	stop.late > 0 ? latePercent.toFixed(1) + '%' : '',
 		             ontimePercent,
 		             	'opacity: 1.0',
-		             	'<fmt:message key="div.contime" />: ' + stop.ontime + ' <fmt:message key="div.coutof" /> ' + stop.total + ' <fmt:message key="div.ctimes" />',
+		             	'On time: ' + stop.ontime + ' out of ' + stop.total + ' times',
 		             	stop.ontime > 0 ? ontimePercent.toFixed(1) + '%' : '',
 			         earlyPercent,
 		             	'opacity: 1.0',
-		             	'<fmt:message key="div.cearly" />: ' + stop.early + ' <fmt:message key="div.coutof" /> ' + stop.total + ' <fmt:message key="div.ctimes" />',
+		             	'Early: ' + stop.early + ' out of ' + stop.total + ' times',
 		             	(stop.early > 0) ? earlyPercent.toFixed(1) + '%' : ''
 		             ];
 		  dataArray.push(dataArrayForStop);
@@ -166,18 +166,18 @@
 	  var ontimePercent = (100.0 * totalOntime / totalTotal);
 	  var latePercent = (100.0 * totalLate / totalTotal);
 	  var dataArrayForStop = [
-	     		 '<fmt:message key="div.ctotal" />: ',
+	     		 'Total: ',
 	     		 latePercent,
 	     		 	'opacity: 1.0',
-	     		 	'<fmt:message key="div.clate" />: ' + totalLate + ' <fmt:message key="div.coutof" /> ' + totalTotal + ' <fmt:message key="div.ctimes" />',
+	     		 	'Late: ' + totalLate + ' out of ' + totalTotal + ' times',
 	     		 	latePercent.toFixed(1) + '%',
 		     	 ontimePercent,
 		     	 	'opacity: 1.0',
-		     	 	'<fmt:message key="div.contime" />: ' + totalOntime + ' <fmt:message key="div.coutof" /> ' + totalTotal + ' <fmt:message key="div.ctimes" />',
+		     	 	'On time: ' + totalOntime + ' out of ' + totalTotal + ' times',
 		     	 	ontimePercent.toFixed(1) + '%',
 	     		 earlyPercent,
 	     		 	'opacity: 1.0',
-	     		 	'<fmt:message key="div.cearly" />: ' + totalEarly + ' <fmt:message key="div.coutof" /> ' + totalTotal + ' <fmt:message key="div.ctimes" />',
+	     		 	'Early: ' + totalEarly + ' out of ' + totalTotal + ' times',
 	     		 	earlyPercent.toFixed(1) + '%'
 	     		 ];
 	  dataArray.push(dataArrayForStop);
@@ -225,11 +225,11 @@
 	var agencyName = routeData.agency;
 	var routeName = routeData.routes[0].name;
 
-
+	  <%
 	  String allowableEarly = request.getParameter("allowableEarly");;
 	  String allowableLate = request.getParameter("allowableLate");;
 	  String chartParams =
-	    allowableEarly + ' <fmt:message key="div.minearlyto" /> ' + allowableLate + '<fmt:message key="div.minlate" />: ' +'</br>'
+	    allowableEarly + " min early to " + allowableLate + " min late</br>"
 		+ request.getParameter("dateRange");
 
 	  String beginTime = request.getParameter("beginTime");
@@ -243,7 +243,7 @@
 	  }
 	%>
 
-	$("#title").html('<fmt:message key="div.schadh" /> <fmt:message key="div.for" /> ' + routeName);
+	$("#title").html('Schedule Adherence for ' + routeName);
 	$("#subtitle").html('<%= chartParams %>');
   }
 
@@ -266,7 +266,7 @@
 	    error: function(request, status, error) {
 	       //alert(error + '. ' + request.responseText);
 	     	$("#errorMessage").html(request.responseText +
-	     			'<br/><br/>'+'<fmt:message key="div.hitback" />: ');
+	     			"<br/><br/>Hit back button to try other parameters.");
 	        $("#errorMessage").fadeIn("fast");
 	        $("#loading").fadeOut("slow");
 	       },
@@ -287,7 +287,7 @@
             clearTimeout(globalTimer);
             globalTimer = setTimeout(drawCharts, 300)
           };
-%>
+
 </script>
 
 </html>

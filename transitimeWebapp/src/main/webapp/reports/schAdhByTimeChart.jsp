@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <%@ page import="org.transitime.utils.web.WebUtils" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -40,8 +40,8 @@
 	}
   </style>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Schedule Adherence</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title><fmt:message key="div.scheduleadherence2" /></title>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
@@ -49,19 +49,12 @@
   <body>
     <%@include file="/template/header.jsp" %>
 
-    <div id="chart_div"></div>
-    <div id="loading"></div>
-    <div id="errorMessage"></div>
-  </body>
-
-  <script type="text/javascript">
   <%
   String allowableEarly = request.getParameter("allowableEarly");;
   String allowableLate = request.getParameter("allowableLate");;
-  String chartTitle = "Schedule Adherence by Route\\n"
-    + allowableEarly + " min early to " + allowableLate + " min late\\n"
-	+ request.getParameter("beginDate")
-	+ " for " + numDays + " day" + (numDays.equals("1") ? "" : "s");
+  String chartSubtitle = allowableEarly + " min early to "
+    + allowableLate + " min late</br>"
+	+ request.getParameter("dateRange");
 
   String beginTime = request.getParameter("beginTime");
   String endTime = request.getParameter("endTime");
@@ -71,9 +64,8 @@
 		  beginTime = "00:00"; // default value
 	  if (endTime.isEmpty())
 		  endTime = "24:00";   // default value
-	  chartTitle += ", " + beginTime + " to " + endTime;
+		  chartSubtitle += ", " + beginTime + " to " + endTime;
   }
-
 %>
     <div id="title"></div>
     <div id="subtitle"><%= chartSubtitle %></div>
@@ -95,9 +87,6 @@ function drawChart() {
     // Actually create the chart
     var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
     chart.draw(globalDataTable, globalChartOptions);
-
-    // Get rid of the loading icon
-    $("#loading").fadeOut("slow");
 }
 
 /**
