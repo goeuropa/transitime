@@ -37,7 +37,7 @@
     	size="1"
     	value="1.0" /> <span class="note"><fmt:message key="div.minutes" /></span>
   </div>
-
+<br/>
    <div class="param">
     <label for="allowableLate"><fmt:message key="div.alat" /></label>
     <input id="allowableLate" name="allowableLate"
