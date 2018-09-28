@@ -67,7 +67,7 @@
   }
 %>
 
-  <div id="title">Schedule Adherence by Route</div>
+  <div id="title"><fmt:message key="div.scheduleroutr" /></div>
   <div id="subtitle"><%= chartSubtitle %></div>
   <div id="chart_div"></div>
   <div id="loading"></div>
