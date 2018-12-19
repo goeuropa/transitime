@@ -92,7 +92,7 @@ public class ProgressAvlModule extends PollUrlAvlModule {
 			try {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPost postRequest = new HttpPost(
-				"http://www.progressgps.net:5011/");
+				"http://www.progressgps.net:5015/");
 
 			StringEntity input = new StringEntity("<ROZKAZ>Logowanie</ROZKAZ><LOGIN>"+pusername+"</LOGIN><HASLO>"+ppassword+"</HASLO>");
 			input.setContentType("application/xml");
@@ -160,7 +160,7 @@ public class ProgressAvlModule extends PollUrlAvlModule {
 			try {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPost postRequest = new HttpPost(
-				"http://www.progressgps.net:5011/");
+				"http://www.progressgps.net:5015/");
 
 			StringEntity input = new StringEntity("<ROZKAZ>GetVehicleList</ROZKAZ><IDSESJI>"+sessionId+"</IDSESJI>");
 			input.setContentType("application/xml");
@@ -229,7 +229,7 @@ public class ProgressAvlModule extends PollUrlAvlModule {
 			try {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPost postRequest = new HttpPost(
-				"http://www.progressgps.net:5011/");
+				"http://www.progressgps.net:5015/");
 
 			StringEntity input = new StringEntity("<ROZKAZ>GetActualPositions</ROZKAZ><IDSESJI>"+sessionId+"</IDSESJI>");
 			input.setContentType("application/xml");
