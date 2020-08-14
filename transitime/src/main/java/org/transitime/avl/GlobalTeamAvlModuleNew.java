@@ -91,6 +91,7 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 		byte[] input = jsonInputString.getBytes("UTF-8");
 		java.net.URL url = new URL(
 				getGlobalTeamPositionUrl());
+		System.out.println("GetPositions");
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/json");
