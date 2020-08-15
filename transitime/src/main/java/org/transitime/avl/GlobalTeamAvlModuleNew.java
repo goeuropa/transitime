@@ -78,7 +78,7 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 	
 	private static StringConfigValue globalTeamPassword = 
 			new StringConfigValue("transitime.avl.globalteam.password", 
-					"123",
+					"password",
 					"Password.");
 	
 	private static String getGlobalTeamPassword() {
@@ -196,8 +196,10 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 						break;
 					}
 				}
+				
 				cal.set(p.getDateTime().getYear(), p.getDateTime().getMonth(), p.getDateTime().getDay(),
 						p.getDateTime().getHour(), p.getDateTime().getMinute(), p.getDateTime().getSeconds());
+				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 				AvlReport avlReport = new AvlReport(deviceResult.deviceName, cal.getTime().getTime(), p.getCoordinate().getLatitude(),
 						p.getCoordinate().getLongitude(), p.getSpeed(), p.getHeading(), deviceResult.deviceName);
 				processAvlReport(avlReport);
@@ -501,7 +503,7 @@ class DateTime {
 	}
 
 	public int getMonth() {
-		return month;
+		return month - 1;
 	}
 
 	public void setMonth(int month) {
