@@ -48,13 +48,13 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 		return globalTeamDevicesUrl.getValue();
 	}
 	
-	private static StringConfigValue globalTeamAuthenticateUrl = 
-			new StringConfigValue("transitime.avl.globalteam.authenticateurl", 
-					"authenticate",
+	private static StringConfigValue tokenUrl = 
+			new StringConfigValue("transitime.avl.globalteam.tokenurl", 
+					"token",
 					"The URL of the NextBus feed to use.");
 	
-	private static String getGlobalTeamAuthenticateUrl() {
-		return globalTeamAuthenticateUrl.getValue();
+	private static String getTokenUrl() {
+		return tokenUrl.getValue();
 	}
 
 	
@@ -76,14 +76,6 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 		return globalTeamCode.getValue();
 	}
 	
-	private static StringConfigValue globalTeamPassword = 
-			new StringConfigValue("transitime.avl.globalteam.password", 
-					"password",
-					"Password.");
-	
-	private static String getGlobalTeamPassword() {
-		return globalTeamPassword.getValue();
-	}
 	
 	private String getPositions() throws Exception{
 		String jsonInputString = "{\"login\": \"" + getGlobalTeamUsername() + "\", \"code\": \"" + 
@@ -91,7 +83,6 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 		byte[] input = jsonInputString.getBytes("UTF-8");
 		java.net.URL url = new URL(
 				getGlobalTeamPositionUrl());
-		System.out.println("GetPositions");
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/json");
@@ -126,22 +117,14 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 	}
 	
 	private void authenticate() throws Exception{
-		String jsonInputString = "{\"login\": \"" + getGlobalTeamUsername() + "\", \"code\": \"" + 
-				getGlobalTeamCode() + "\", \"password\": \"" + getGlobalTeamPassword() + "\"}";
-		byte[] input = jsonInputString.getBytes("UTF-8");
 		java.net.URL url = new URL(
-				getGlobalTeamAuthenticateUrl());
+				getTokenUrl());
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-		con.setRequestMethod("POST");
+		con.setRequestMethod("GET");
 		con.setRequestProperty("Content-Type", "application/json");
-		con.setRequestProperty("Content-Length", Integer.toString(input.length));
 		con.setDoOutput(true);
-		con.setDoInput(true);
+
 		
-		
-		OutputStream os = con.getOutputStream();
-		os.write(input);
-		os.close();
 		con.connect();
 		
 		StringBuilder response = new StringBuilder();
@@ -156,6 +139,7 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 
 		JSONObject json = new JSONObject(response.toString());
 		token = json.get("token").toString();
+		System.out.println("GENERUJĘ TOKEN: " + token);
 		
 	}
 	
@@ -206,7 +190,7 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 				avlReports.add(avlReport);
 			}
 
-			Thread.sleep(1000 * 5);
+			Thread.sleep(1000 * 10);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
