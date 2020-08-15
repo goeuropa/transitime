@@ -345,7 +345,7 @@ class Position {
 	String deviceId;
 	Coordinate coordinate;
 	int heading;
-	int speed;
+	float speed;
 	String ignitionState;
 	DateTime dateTime;
 
@@ -373,11 +373,11 @@ class Position {
 		this.heading = heading;
 	}
 
-	public int getSpeed() {
-		return speed;
+	public float getSpeed() {
+		return (float) (speed * 0.28);
 	}
 
-	public void setSpeed(int speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 
@@ -401,7 +401,7 @@ class Position {
 		super();
 	}
 
-	public Position(String deviceId, Coordinate coordinate, int heading, int speed, String ignitionState,
+	public Position(String deviceId, Coordinate coordinate, int heading, float speed, String ignitionState,
 			DateTime dateTime) {
 		this.deviceId = deviceId;
 		this.coordinate = coordinate;
