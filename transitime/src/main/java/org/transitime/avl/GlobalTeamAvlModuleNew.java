@@ -209,7 +209,7 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 			e.printStackTrace();
 		}
 
-		return null;
+		return avlReports;
 	}
 	
 	DeviceList getDeviceList() throws Exception {
@@ -249,7 +249,6 @@ public class GlobalTeamAvlModuleNew extends PollUrlAvlModule {
 			ObjectMapper m = new ObjectMapper();
 			deviceList = m.readValue(json.toString(), DeviceList.class);
 
-			Thread.sleep(1000 * 5);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
