@@ -519,7 +519,7 @@ class DateTime {
 	}
 
 	public int getHour() {
-		return hour;
+		return hour + 2;
 	}
 
 	public void setHour(int hour) {
