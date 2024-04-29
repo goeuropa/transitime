@@ -703,6 +703,12 @@ public class AvlProcessor {
         updateVehicleStateFromAssignment(
                 bestMatch, vehicleState, BlockAssignmentMethod.AVL_FEED_BLOCK_ASSIGNMENT, block.getId(), "block");
 
+        if (bestMatch != null && vehicleState.getAvlReport()
+                .isBlockIdAssignmentType() && vehicleState.getAssignmentId()
+                .equals(block.getId())) {
+            vehicleState.setBlock(block, BlockAssignmentMethod.AVL_FEED_BLOCK_ASSIGNMENT, block.getId(), true);
+            return true;
+        }
         // Return true if predictable
         return bestMatch != null;
     }

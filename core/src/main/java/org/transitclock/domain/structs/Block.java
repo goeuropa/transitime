@@ -27,6 +27,7 @@ import org.transitclock.utils.Time;
 import java.io.Serializable;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -597,6 +598,29 @@ public class Block implements Serializable {
 
         // Not a match so return false
         return false;
+    }
+
+    /**
+     * For this block determines which trips will be active. Should work even for trips that
+     * start before midnight or go till after midnight.
+     *
+     * @param avlReport
+     * @return List of Trips that will be active. If none are active an empty list is returned.
+     */
+    public List<Trip> getTripsWillBeActive(AvlReport avlReport) {
+        // Set for returning results
+        List<Trip> tripsThatMatchTime = new ArrayList<Trip>();
+
+        // Convenience variable
+        String vehicleId = avlReport.getVehicleId();
+
+        // Go through trips and find ones
+        tripsThatMatchTime = getTrips().stream()
+                .filter(trip -> trip.getStartTime() > LocalTime.now().toSecondOfDay())
+                .toList();
+
+        // Returns results
+        return tripsThatMatchTime;
     }
 
     /**
