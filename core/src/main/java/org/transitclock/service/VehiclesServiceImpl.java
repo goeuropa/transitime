@@ -3,6 +3,7 @@ package org.transitclock.service;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.transitclock.core.BlocksInfo;
 import org.transitclock.core.dataCache.VehicleDataCache;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implements the VehiclesInterface interface on the server side such that a VehiclessClient can
@@ -401,33 +403,33 @@ public class VehiclesServiceImpl implements VehiclesInterface {
 
     @Override
     public List<IpcVehicleToBlockConfig> getVehicleToBlockConfigByBlockId(String blockId) {
-        List<IpcVehicleToBlockConfig> result = new ArrayList<>();
         try (Session session = HibernateUtils.getSession()) {
-            if (blockId != null) {
-                for (VehicleToBlockConfig vehicleToBlockConfig : VehicleToBlockConfig.getVehicleToBlockConfigsByBlockId(session, blockId)) {
-                    result.add(new IpcVehicleToBlockConfig(vehicleToBlockConfig));
-                }
-            } else {
-                for (VehicleToBlockConfig vehicleToBlockConfig : VehicleToBlockConfig.getVehicleToBlockConfigs(session)) {
-                    result.add(new IpcVehicleToBlockConfig(vehicleToBlockConfig));
-                }
+            if (StringUtils.isEmpty(blockId)) {
+                return VehicleToBlockConfig.getVehicleToBlockConfigsByBlockId(session, blockId)
+                        .stream()
+                        .map(IpcVehicleToBlockConfig::new)
+                        .collect(Collectors.toList());
             }
+            return VehicleToBlockConfig.getVehicleToBlockConfigs(session)
+                    .stream()
+                    .map(IpcVehicleToBlockConfig::new)
+                    .collect(Collectors.toList());
         } catch (Exception ex) {
             logger.error("Something happened while fetching the data.", ex);
         }
-        return result;
+        return List.of();
     }
 
     @Override
     public List<IpcVehicleToBlockConfig> getVehicleToBlockConfigByVehicleId(String vehicleId) {
-        List<IpcVehicleToBlockConfig> result = new ArrayList<>();
         try (Session session = HibernateUtils.getSession()) {
-            for (var vehicleToBlockConfig : VehicleToBlockConfig.getVehicleToBlockConfigsByVehicleId(session, vehicleId)) {
-                result.add(new IpcVehicleToBlockConfig(vehicleToBlockConfig));
-            }
+            return VehicleToBlockConfig.getVehicleToBlockConfigsByVehicleId(session, vehicleId)
+                    .stream()
+                    .map(IpcVehicleToBlockConfig::new)
+                    .collect(Collectors.toList());
         } catch (Exception ex) {
             logger.error("Something happened while fetching the data.", ex);
         }
-        return result;
+        return List.of();
     }
 }

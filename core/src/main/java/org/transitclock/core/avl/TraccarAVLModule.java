@@ -16,24 +16,37 @@
  */
 package org.transitclock.core.avl;
 
-import io.swagger.client.ApiClient;
-import io.swagger.client.ApiException;
-import io.swagger.client.api.DefaultApi;
-import io.swagger.client.model.Device;
-import io.swagger.client.model.Position;
-import io.swagger.client.model.User;
-
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import org.transitclock.domain.structs.AvlReport;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
-import static org.transitclock.config.data.TraccarConfig.*;
+import org.transitclock.domain.structs.AvlReport;
+import org.transitclock.extension.traccar.ApiClient;
+import org.transitclock.extension.traccar.ApiException;
+import org.transitclock.extension.traccar.api.DefaultApi;
+import org.transitclock.extension.traccar.model.DeviceDto;
+import org.transitclock.extension.traccar.model.PositionDto;
+import org.transitclock.extension.traccar.model.UserDto;
+
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.auth.AuthCache;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpHost;
+
+import static org.transitclock.config.data.TraccarConfig.TRACCARBASEURL;
+import static org.transitclock.config.data.TraccarConfig.TRACCAREMAIL;
+import static org.transitclock.config.data.TraccarConfig.TRACCARPASSWORD;
+import static org.transitclock.config.data.TraccarConfig.TRACCARSOURCE;
 
 
 /**
@@ -47,52 +60,49 @@ import static org.transitclock.config.data.TraccarConfig.*;
  */
 @Slf4j
 public class TraccarAVLModule extends PollUrlAvlModule {
-    public TraccarAVLModule(String agencyId) {
+    @NonNull
+    private final DefaultApi api;
+    @NonNull
+    private final UserDto user;
+
+    public TraccarAVLModule(String agencyId) throws URISyntaxException {
         super(agencyId);
-
         useCompression = false;
-    }
 
+        var host = HttpHost.create(TRACCARBASEURL.getValue());
+        var httpClientBuilder = HttpClientBuilder.create();
 
-    private DefaultApi initApiClient() throws RuntimeException {
-        DefaultApi api = new DefaultApi();
-        ApiClient client = new ApiClient();
+        final AuthCache authCache = new BasicAuthCache();
+        authCache.put(host, new BasicScheme());
+
+        var provider = new BasicCredentialsProvider();
+        provider.setCredentials(new AuthScope(host), new UsernamePasswordCredentials(TRACCAREMAIL.getValue(), TRACCARPASSWORD.getValue().toCharArray()));
+        httpClientBuilder.setDefaultCredentialsProvider(provider);
+
+        ApiClient client = new ApiClient(httpClientBuilder.build());
         client.setBasePath(TRACCARBASEURL.getValue());
-        client.setUsername(TRACCAREMAIL.getValue());
+        client.setUsername(TRACCARPASSWORD.getValue());
         client.setPassword(TRACCARPASSWORD.getValue());
-        api.setApiClient(client);
-        return api;
-    }
+        this.api = new DefaultApi(client);
 
-
-    private User initUser(DefaultApi api) throws RuntimeException {
-        User user;
         try {
-            user = api
+            this.user = this.api
                     .sessionPost(TRACCAREMAIL.getValue(), TRACCARPASSWORD.getValue());
-            logger.info("Traccar login succeeded.");
-            return user;
         } catch (ApiException e) {
-            logger.error(e.getMessage() + e.getCause());
+            throw new RuntimeException("Traccar login denied", e);
         }
-        throw new RuntimeException("Traccar login deny");
     }
-
-    @NonNull
-    private final DefaultApi API = initApiClient();
-    @NonNull
-    private final User USER = initUser(API);
 
     @Override
     protected void getAndProcessData() throws Exception {
 
         Collection<AvlReport> avlReportsReadIn = new ArrayList<>();
 
-        List<Device> devices = API.devicesGet(true, USER.getId(), null, null);
+        List<DeviceDto> devices = api.devicesGet(true, user.getId(), null, null);
 
-        List<Position> results = API.positionsGet(null, null, null, null);
-        for (Position result : results) {
-            Device device = findDeviceById(devices, result.getDeviceId());
+        List<PositionDto> results = api.positionsGet(null, null, null, null);
+        for (PositionDto result : results) {
+            DeviceDto device = findDeviceById(devices, result.getDeviceId());
 
             AvlReport avlReport;
 
@@ -100,15 +110,14 @@ public class TraccarAVLModule extends PollUrlAvlModule {
             if (device != null && device.getUniqueId() != null && !device.getUniqueId().isEmpty()) {
                 //Traccar return speed in kt
                 avlReport = new AvlReport(device.getUniqueId(), device.getName(),
-                        result.getDeviceTime().toDate().getTime(), result.getLatitude().doubleValue(),
+                        result.getDeviceTime().toEpochSecond(), result.getLatitude().doubleValue(),
                         result.getLongitude().doubleValue(), result.getSpeed().multiply(BigDecimal.valueOf(0.5144444)).floatValue(), result.getCourse().floatValue(), TRACCARSOURCE.toString());
             } else {
                 avlReport = new AvlReport(result.getDeviceId().toString(),
-                        result.getDeviceTime().toDate().getTime(), result.getLatitude().doubleValue(),
+                        result.getDeviceTime().toEpochSecond(), result.getLatitude().doubleValue(),
                         result.getLongitude().doubleValue(), result.getSpeed().multiply(BigDecimal.valueOf(0.5144444)).floatValue(), result.getCourse().floatValue(), TRACCARSOURCE.toString());
             }
-            if (avlReport != null)
-                avlReportsReadIn.add(avlReport);
+            avlReportsReadIn.add(avlReport);
         }
         forwardAvlReports(avlReportsReadIn);
     }
@@ -117,10 +126,11 @@ public class TraccarAVLModule extends PollUrlAvlModule {
         processAvlReports(avlReportsReadIn);
     }
 
-    private Device findDeviceById(List<Device> devices, Integer id) {
-        for (Device device : devices) {
-            if (device.getId().equals(id))
+    private DeviceDto findDeviceById(List<DeviceDto> devices, Integer id) {
+        for (DeviceDto device : devices) {
+            if (Objects.equals(device.getId(), id)) {
                 return device;
+            }
         }
         return null;
     }
