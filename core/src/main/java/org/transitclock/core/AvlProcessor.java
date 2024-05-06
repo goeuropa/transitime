@@ -337,8 +337,7 @@ public class AvlProcessor {
 
                 logger.warn("For vehicleId={} {}", vehicleState.getVehicleId(), eventDescription);
 
-                if (!vehicleState.getAvlReport()
-                        .isBlockIdAssignmentType() && !vehicleState.getAssignmentId()
+                if (!BlockAssignerConfig.isManualAssignmentEnabled() && !vehicleState.getAvlReport().getAssignmentId()
                         .equals(bestTemporalMatch.getBlock().getId())) {
                     // Remove the predictions for the vehicle
                     makeVehicleUnpredictable(vehicleState.getVehicleId(), eventDescription, VehicleEvent.NO_MATCH);
@@ -703,16 +702,17 @@ public class AvlProcessor {
             return false;
         }
 
+        if (BlockAssignerConfig.isManualAssignmentEnabled()) {
+            if (bestMatch.getBlock().getId().equals(vehicleState.getAvlReport().getAssignmentId())) {
+            updateVehicleStateFromAssignment(
+                    bestMatch, vehicleState, BlockAssignmentMethod.AVL_FEED_BLOCK_ASSIGNMENT, block.getId(), "block");
+            return vehicleState.getAvlReport().getAssignmentId().equals(block.getId());
+            }
+            return false;
+        }
         // Update the state of the vehicle
         updateVehicleStateFromAssignment(
                 bestMatch, vehicleState, BlockAssignmentMethod.AVL_FEED_BLOCK_ASSIGNMENT, block.getId(), "block");
-
-        if (bestMatch != null && vehicleState.getAvlReport()
-                .isBlockIdAssignmentType() && vehicleState.getAssignmentId()
-                .equals(block.getId())) {
-            vehicleState.setBlock(block, BlockAssignmentMethod.AVL_FEED_BLOCK_ASSIGNMENT, block.getId(), true);
-            return true;
-        }
         // Return true if predictable
         return bestMatch != null;
     }
