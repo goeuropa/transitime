@@ -52,4 +52,14 @@ public class BlockAssignerConfig {
                     + "frequently. Especially important for agencies with high "
                     + "reporting rates. So this param allows one to limit how "
                     + "frequently auto assigner called for vehicle");
+
+    public static final BooleanConfigValue enableManualAssignment = new BooleanConfigValue(
+            "transitclock.autoBlockAssigner.enableManualAssignment",
+            false,
+            "Set to true to enable the manual assignment behavior where \"\n" +
+                    "                    + \"the system tries to assign vehicle to a block regarding 'vehicle_to_block_configs' table.");
+
+    public static boolean enableManualAssignment() {
+        return enableManualAssignment.getValue();
+    }
 }
