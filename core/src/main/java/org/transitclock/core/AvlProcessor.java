@@ -337,7 +337,8 @@ public class AvlProcessor {
 
                 logger.warn("For vehicleId={} {}", vehicleState.getVehicleId(), eventDescription);
 
-                if (!BlockAssignerConfig.isManualAssignmentEnabled()) {
+                if (!BlockAssignerConfig.isManualAssignmentEnabled() && !vehicleState.getAssignmentId()
+                        .equals(bestTemporalMatch.getBlock().getId())) {
                     // Remove the predictions for the vehicle
                     makeVehicleUnpredictable(vehicleState.getVehicleId(), eventDescription, VehicleEvent.NO_MATCH);
 
