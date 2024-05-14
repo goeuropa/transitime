@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with thetransitclock.org .  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.transitclock.core.avl;
 
 import io.swagger.client.ApiClient;
@@ -22,7 +23,6 @@ import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Device;
 import io.swagger.client.model.Position;
 import io.swagger.client.model.User;
-
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.transitclock.domain.structs.AvlReport;
