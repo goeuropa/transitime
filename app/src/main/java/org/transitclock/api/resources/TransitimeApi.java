@@ -153,9 +153,11 @@ public class TransitimeApi {
     public Response getVehiclesToBlock(
             @BeanParam StandardParameters stdParameters,
             @Parameter(description = "If set 'true', returns only the data with actual time windows.", required = false)
-            @QueryParam(value = "actual") boolean isActual,
+            @QueryParam(value = "actual")
+            boolean isActual,
             @Parameter(description = "If set, returns only the data for that block Id.", required = false)
-            @QueryParam(value = "blockId") String blockId )
+            @QueryParam(value = "blockId")
+            String blockId)
             throws WebApplicationException {
 
         stdParameters.validate();
