@@ -130,5 +130,4 @@ public class TraccarAVLModule extends PollUrlAvlModule {
         // Auto-generated method stub
         return null;
     }
-
 }
