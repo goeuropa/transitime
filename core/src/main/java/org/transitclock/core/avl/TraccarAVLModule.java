@@ -22,7 +22,6 @@ import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Device;
 import io.swagger.client.model.Position;
 import io.swagger.client.model.User;
-
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.transitclock.domain.structs.AvlReport;
@@ -31,7 +30,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static org.transitclock.config.data.TraccarConfig.*;
 
