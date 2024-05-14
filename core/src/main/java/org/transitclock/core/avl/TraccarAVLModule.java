@@ -16,22 +16,6 @@
  */
 package org.transitclock.core.avl;
 
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-
-import org.transitclock.domain.structs.AvlReport;
-import org.transitclock.extension.traccar.ApiClient;
-import org.transitclock.extension.traccar.ApiException;
-import org.transitclock.extension.traccar.api.DefaultApi;
-import org.transitclock.extension.traccar.model.DeviceDto;
-import org.transitclock.extension.traccar.model.PositionDto;
-import org.transitclock.extension.traccar.model.UserDto;
-
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.auth.AuthCache;
@@ -42,11 +26,23 @@ import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.auth.BasicScheme;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.HttpHost;
+import org.transitclock.domain.structs.AvlReport;
+import org.transitclock.extension.traccar.ApiClient;
+import org.transitclock.extension.traccar.ApiException;
+import org.transitclock.extension.traccar.api.DefaultApi;
+import org.transitclock.extension.traccar.model.DeviceDto;
+import org.transitclock.extension.traccar.model.PositionDto;
+import org.transitclock.extension.traccar.model.UserDto;
 
-import static org.transitclock.config.data.TraccarConfig.TRACCARBASEURL;
-import static org.transitclock.config.data.TraccarConfig.TRACCAREMAIL;
-import static org.transitclock.config.data.TraccarConfig.TRACCARPASSWORD;
-import static org.transitclock.config.data.TraccarConfig.TRACCARSOURCE;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import static org.transitclock.config.data.TraccarConfig.*;
 
 
 /**
