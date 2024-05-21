@@ -93,7 +93,15 @@ public class Block implements Serializable {
     // be voluminous and therefore slow. The trips will be read in when
     // getTrips() is called.
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "block_to_trip")
+    @JoinTable(name = "block_to_trip", joinColumns = {
+            @JoinColumn(name = "block_block_id", referencedColumnName = "block_id"),
+            @JoinColumn(name = "block_config_rev", referencedColumnName = "config_rev"),
+            @JoinColumn(name = "block_service_id", referencedColumnName = "service_id")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "trips_trip_id", referencedColumnName = "trip_id"),
+            @JoinColumn(name = "trips_config_rev", referencedColumnName = "config_rev"),
+            @JoinColumn(name = "trips_start_time", referencedColumnName = "start_time")
+    })
     @OrderColumn(name = "list_index")
     @Cascade({CascadeType.SAVE_UPDATE})
     private final List<Trip> trips;

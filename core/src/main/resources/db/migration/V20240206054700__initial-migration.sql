@@ -650,8 +650,8 @@ ALTER TABLE trips
 ALTER TABLE trips
     ADD CONSTRAINT FK_TRIPS_ON_TRCORETRID FOREIGN KEY (tripPattern_config_rev, tripPattern_id) REFERENCES trip_patterns (config_rev, id);
 
--- ALTER TABLE block_to_trip
---     ADD CONSTRAINT fk_block_to_trip_on_block FOREIGN KEY (block_config_rev, block_block_id, block_service_id) REFERENCES blocks (config_rev, block_id, service_id);
+ALTER TABLE block_to_trip
+    ADD CONSTRAINT fk_block_to_trip_on_block FOREIGN KEY (block_config_rev, block_block_id, block_service_id) REFERENCES blocks (config_rev, block_id, service_id);
 
 ALTER TABLE block_to_trip
     ADD CONSTRAINT fk_block_to_trip_on_trip FOREIGN KEY (trips_config_rev, trips_trip_id, trips_start_time) REFERENCES trips (config_rev, trip_id, start_time);
