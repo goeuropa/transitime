@@ -44,7 +44,7 @@ public class ExportTable implements Serializable {
     @Column(name = "export_status")
     private int exportStatus;
 
-    @Column(name = "first_name")
+    @Column(name = "file_name")
     private String fileName;
 
     @Column(name = "file")

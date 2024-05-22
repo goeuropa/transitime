@@ -80,10 +80,10 @@ public class TravelTimesForTrip implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "travel_times_for_trip_to_travel_times_for_path",
             joinColumns = {
-                    @JoinColumn(name = "for_path_id", referencedColumnName = "id")
+                    @JoinColumn(name = "for_trip_id", referencedColumnName = "id")
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "for_trip_id", referencedColumnName = "id")
+                    @JoinColumn(name = "for_path_id", referencedColumnName = "id")
             })
     @Cascade({CascadeType.SAVE_UPDATE})
     @OrderColumn(name = "list_index")

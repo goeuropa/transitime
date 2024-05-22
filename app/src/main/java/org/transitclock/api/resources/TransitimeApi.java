@@ -2148,15 +2148,12 @@ public class TransitimeApi {
     public Response getExports(@BeanParam StandardParameters stdParameters) throws WebApplicationException {
         stdParameters.validate();
         ApiExportsData result = null;
-        Session session = HibernateUtils.getSession();
-        try {
-            result = new ApiExportsData(ExportTable.getExportTable(session));
 
-            session.close();
+        try(Session session = HibernateUtils.getSession()) {
+            result = new ApiExportsData(ExportTable.getExportTable(session));
             return stdParameters.createResponse(result);
         } catch (Exception e) {
             // If problem getting data then return a Bad Request
-            session.close();
             throw WebUtils.badRequestException(e);
         }
     }
@@ -2170,11 +2167,9 @@ public class TransitimeApi {
             @Parameter(description = "Id eksportu") @QueryParam(value = "id") long id)
             throws WebApplicationException {
         stdParameters.validate();
-        Session session = HibernateUtils.getSession();
-        try {
-            ExportTable result = ExportTable.getExportFile(session, id).get(0);
 
-            session.close();
+        try (Session session = HibernateUtils.getSession()) {
+            ExportTable result = ExportTable.getExportFile(session, id).get(0);
             // return ApiVehicles response
             // return stdParameters.createResponse(result);
             return Response.ok(result.getFile(), MediaType.APPLICATION_OCTET_STREAM)
@@ -2182,7 +2177,6 @@ public class TransitimeApi {
                     .build();
         } catch (Exception e) {
             // If problem getting data then return a Bad Request
-            session.close();
             throw WebUtils.badRequestException(e);
         }
     }

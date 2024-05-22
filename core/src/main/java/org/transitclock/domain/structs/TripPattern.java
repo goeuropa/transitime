@@ -3,7 +3,6 @@ package org.transitclock.domain.structs;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.CallbackException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.annotations.Cascade;
@@ -15,10 +14,8 @@ import org.transitclock.gtfs.model.GtfsRoute;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A trip pattern, as obtained from stop_times.txt GTFS file. A trip pattern defines what stops are
@@ -570,9 +567,9 @@ public class TripPattern implements Serializable, Lifecycle {
      * @return
      */
     public List<String> getStopIds() {
-        List<String> list = new ArrayList<String>(stopPaths.size());
-        for (StopPath stopPath : stopPaths) list.add(stopPath.getStopId());
-        return list;
+        return stopPaths.stream()
+                .map(StopPath::getStopId)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -581,7 +578,9 @@ public class TripPattern implements Serializable, Lifecycle {
      * @return ID of last stop
      */
     public String getLastStopIdForTrip() {
-        return stopPaths.get(stopPaths.size() - 1).getStopId();
+        return Optional.ofNullable(getStopPath(stopPaths.size() - 1))
+                .map(StopPath::getStopId)
+                .orElse(null);
     }
 
     /**
@@ -602,7 +601,8 @@ public class TripPattern implements Serializable, Lifecycle {
      * @return The specified StopPath or null if index out of range
      */
     public StopPath getStopPath(int index) {
-        if (index < 0 || index >= stopPaths.size()) return null;
+        if (index < 0 || index >= stopPaths.size())
+            return null;
 
         return stopPaths.get(index);
     }

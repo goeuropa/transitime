@@ -20,6 +20,8 @@
     <maven-plugin-version>1.0.0</maven-plugin-version>
   </properties>
 
+  <packaging>jar</packaging>
+
   <build>
     <plugins>
       <!-- activate the plugin -->

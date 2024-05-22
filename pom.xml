@@ -209,6 +209,7 @@
                     <configuration>
                         <javaVersion>17</javaVersion>
                         <failOnViolations>false</failOnViolations>
+                        <includeTestClasses>false</includeTestClasses>
                     </configuration>
                     <executions>
                         <execution>
