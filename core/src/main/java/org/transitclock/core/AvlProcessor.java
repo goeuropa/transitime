@@ -702,14 +702,6 @@ public class AvlProcessor {
             return false;
         }
 
-        if (BlockAssignerConfig.isManualAssignmentEnabled()) {
-            if (bestMatch.getBlock().getId().equals(vehicleState.getAvlReport().getAssignmentId())) {
-            updateVehicleStateFromAssignment(
-                    bestMatch, vehicleState, BlockAssignmentMethod.AVL_FEED_BLOCK_ASSIGNMENT, block.getId(), "block");
-            return vehicleState.getAvlReport().getAssignmentId().equals(block.getId());
-            }
-            return false;
-        }
         // Update the state of the vehicle
         updateVehicleStateFromAssignment(
                 bestMatch, vehicleState, BlockAssignmentMethod.AVL_FEED_BLOCK_ASSIGNMENT, block.getId(), "block");
