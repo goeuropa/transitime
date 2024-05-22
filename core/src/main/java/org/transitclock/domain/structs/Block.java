@@ -609,29 +609,6 @@ public class Block implements Serializable {
     }
 
     /**
-     * For this block determines which trips will be active. Should work even for trips that
-     * start before midnight or go till after midnight.
-     *
-     * @param avlReport
-     * @return List of Trips that will be active. If none are active an empty list is returned.
-     */
-    public List<Trip> getTripsWillBeActive(AvlReport avlReport) {
-        // Set for returning results
-        List<Trip> tripsThatMatchTime = new ArrayList<Trip>();
-
-        // Convenience variable
-        String vehicleId = avlReport.getVehicleId();
-
-        // Go through trips and find ones
-        tripsThatMatchTime = getTrips().stream()
-                .filter(trip -> trip.getStartTime() > LocalTime.now().toSecondOfDay())
-                .toList();
-
-        // Returns results
-        return tripsThatMatchTime;
-    }
-
-    /**
      * For this block determines which trips are currently active. Should work even for trips that
      * start before midnight or go till after midnight. Trip is considered active if it is within
      * start time of trip minus CoreConfig.getAllowableEarlyForLayoverSeconds() and within the end
