@@ -517,8 +517,10 @@ public class TransitimeApi {
 
             Collection<IpcVehicleConfig> vehicleConfigs = inter.getVehicleConfigs();
 
-            Map<String, List<IpcVehicle>> vehiclesGrouped = vehicles.stream().collect(Collectors.groupingBy(IpcVehicle::getId));
-            Map<String, List<IpcVehicleConfig>> vehiclesConfigsGrouped = vehicleConfigs.stream().collect(Collectors.groupingBy(IpcVehicleConfig::getId));
+            Map<String, List<IpcVehicle>> vehiclesGrouped = vehicles.stream()
+                    .collect(Collectors.groupingBy(IpcVehicle::getId));
+            Map<String, List<IpcVehicleConfig>> vehiclesConfigsGrouped = vehicleConfigs.stream()
+                    .collect(Collectors.groupingBy(IpcVehicleConfig::getId));
 
             for (String id : vehiclesGrouped.keySet()) {
                 List<IpcVehicleConfig> configs = vehiclesConfigsGrouped.getOrDefault(id, List.of());

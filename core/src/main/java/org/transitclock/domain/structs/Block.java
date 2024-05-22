@@ -27,6 +27,7 @@ import org.transitclock.utils.Time;
 import java.io.Serializable;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
