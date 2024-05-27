@@ -318,14 +318,37 @@ public class AvlProcessor {
         boolean notMakingProgress = handleIfVehicleNotMakingProgress(bestTemporalMatch, vehicleState);
         if (notMakingProgress) return;
 
+        if (BlockAssignerConfig.isManualAssignmentEnabled() && bestTemporalMatch != null &&
+                vehicleState.getAvlReport().getAssignmentId() != null &&
+                bestTemporalMatch.getBlock().getBlockId().equals(vehicleState.getAvlReport().getAssignmentId()) &&
+                vehicleState.getBlock().getBlockId().equals(vehicleState.getAvlReport().getAssignmentId()))
+        {
+            vehicleState.setMatch(bestTemporalMatch);
+            logger.info(
+                    "The manual assignment is enabled then vehicleId={} must assign to blockId={}.",
+                    vehicleState.getVehicleId(),
+                    bestTemporalMatch.getBlock().getBlockId());
+        }
         // Record this match unless the match was null and haven't
         // reached number of bad matches.
-        if (bestTemporalMatch != null || vehicleState.overLimitOfBadMatches()) {
+        else if (bestTemporalMatch != null || vehicleState.overLimitOfBadMatches()) {
             // If not over the limit of bad matches then handle normally
             if (bestTemporalMatch != null || !vehicleState.overLimitOfBadMatches()) {
                 // Set the match of the vehicle.
                 vehicleState.setMatch(bestTemporalMatch);
             } else {
+                if (BlockAssignerConfig.isManualAssignmentEnabled() && vehicleState.getBlock() != null &&
+                        vehicleState.getAvlReport().getAssignmentId() != null && vehicleState.getPreviousMatch() != null &&
+                        vehicleState.getBlock().getBlockId().equals(vehicleState.getAvlReport().getAssignmentId())) {
+                    // Set the previous match if match is null.
+                    vehicleState.setMatch(vehicleState.getPreviousMatch());
+
+                    logger.info(
+                            "Got another bad match, but the manual assignment is enabled then vehicleId={} mustn't unset blockId={}.",
+                            vehicleState.getVehicleId(),
+                            vehicleState.getBlock().getBlockId());
+                    return;
+                }
                 // Exceeded allowable number of bad matches so make vehicle
                 // unpredictable due to bad matches log that info.
                 // Log that vehicle is being made unpredictable as a
@@ -337,14 +360,11 @@ public class AvlProcessor {
 
                 logger.warn("For vehicleId={} {}", vehicleState.getVehicleId(), eventDescription);
 
-                if (!BlockAssignerConfig.isManualAssignmentEnabled() && !vehicleState.getAvlReport().getAssignmentId()
-                        .equals(bestTemporalMatch.getBlock().getId())) {
-                    // Remove the predictions for the vehicle
-                    makeVehicleUnpredictable(vehicleState.getVehicleId(), eventDescription, VehicleEvent.NO_MATCH);
+                // Remove the predictions for the vehicle
+                makeVehicleUnpredictable(vehicleState.getVehicleId(), eventDescription, VehicleEvent.NO_MATCH);
 
-                    // Remove block assignment from vehicle
-                    vehicleState.unsetBlock(BlockAssignmentMethod.COULD_NOT_MATCH);
-                }
+                // Remove block assignment from vehicle
+                vehicleState.unsetBlock(BlockAssignmentMethod.COULD_NOT_MATCH);
             }
         } else {
             logger.info(
