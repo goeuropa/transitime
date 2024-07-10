@@ -27,7 +27,6 @@ import org.transitclock.utils.Time;
 import java.io.Serializable;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -95,13 +94,13 @@ public class Block implements Serializable {
     // getTrips() is called.
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "block_to_trip", joinColumns = {
-            @JoinColumn(name = "block_block_id", referencedColumnName = "block_id"),
-            @JoinColumn(name = "block_config_rev", referencedColumnName = "config_rev"),
-            @JoinColumn(name = "block_service_id", referencedColumnName = "service_id")
+        @JoinColumn(name = "block_block_id", referencedColumnName = "block_id"),
+        @JoinColumn(name = "block_config_rev", referencedColumnName = "config_rev"),
+        @JoinColumn(name = "block_service_id", referencedColumnName = "service_id")
     }, inverseJoinColumns = {
-            @JoinColumn(name = "trips_trip_id", referencedColumnName = "trip_id"),
-            @JoinColumn(name = "trips_config_rev", referencedColumnName = "config_rev"),
-            @JoinColumn(name = "trips_start_time", referencedColumnName = "start_time")
+        @JoinColumn(name = "trips_trip_id", referencedColumnName = "trip_id"),
+        @JoinColumn(name = "trips_config_rev", referencedColumnName = "config_rev"),
+        @JoinColumn(name = "trips_start_time", referencedColumnName = "start_time")
     })
     @OrderColumn(name = "list_index")
     @Cascade({CascadeType.SAVE_UPDATE})

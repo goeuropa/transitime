@@ -226,13 +226,16 @@ public class SqlUtils {
 
         SimpleDateFormat currentFormat = new SimpleDateFormat("MM-dd-yyyy");
         SimpleDateFormat requiredFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if (beginDate.charAt(4) != '-') {
         try {
+        if (beginDate.charAt(4) != '-') {
             beginDate = requiredFormat.format(currentFormat.parse(beginDate));
+        } else {
+            requiredFormat.parse(beginDate);
+        }
         } catch (ParseException e) {
             logger.error("Exception happened while processing time-range clause", e);
-            }
         }
+
         return " AND %s BETWEEN '%s' AND TIMESTAMP '%s' + INTERVAL '%d day' %s "
                 .formatted(timeColumnName, beginDate, beginDate, numDays, timeSql);
     }

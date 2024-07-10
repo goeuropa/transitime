@@ -36,7 +36,7 @@ public class ConfigServiceImpl implements ConfigInterface {
      * automatically cause the object to continue to run and serve requests.
      *
      * @return the singleton ConfigServer object. Usually does not need to used since the server
-     * will be fully running.
+     *     will be fully running.
      */
     public static ConfigServiceImpl start() {
         if (singleton == null) {
@@ -86,7 +86,8 @@ public class ConfigServiceImpl implements ConfigInterface {
      * @see org.transitclock.ipc.interfaces.ConfigInterface#getRoute(java.lang.String)
      */
     @Override
-    public IpcRoute getRoute(String routeIdOrShortName, String directionId, String stopId, String tripPatternId) {
+    public IpcRoute getRoute(String routeIdOrShortName, String directionId, String stopId, String tripPatternId)
+            {
         // Determine the route
         Route dbRoute = getRoute(routeIdOrShortName);
         if (dbRoute == null) {
@@ -349,7 +350,7 @@ public class ConfigServiceImpl implements ConfigInterface {
     }
 
     /* (non-Javadoc)
-     * @see org.transitclock.ipc.interfaces.ConfigInterface#getServiceIdsWithBlockIds()
+     * @see org.transitclock.ipc.interfaces.ConfigInterface#getBlockIds()
      */
     @Override
     public Map<String, List<String>> getServiceIdsWithBlockIds() {

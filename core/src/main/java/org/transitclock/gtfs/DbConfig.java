@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Getter;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -42,7 +44,7 @@ import org.transitclock.utils.*;
  * @author SkiBu Smith
  */
 @Slf4j
-@Getter
+@Getter(onMethod_={@Synchronized})
 public class DbConfig {
 
     private final String agencyId;
@@ -160,12 +162,16 @@ public class DbConfig {
      * @return Map keyed on service ID of map keyed on block ID of blocks
      */
     private static Map<String, Map<String, Block>> putBlocksIntoMap(List<Block> blocks) {
-        Map<String, Map<String, Block>> blocksByServiceMap = new HashMap<>();
+        Map<String, Map<String, Block>> blocksByServiceMap = new ConcurrentHashMap<>();
 
         for (Block block : blocks) {
-            Map<String, Block> blocksByBlockIdMap =
-                    blocksByServiceMap.computeIfAbsent(block.getServiceId(), k -> new HashMap<>());
-            blocksByBlockIdMap.put(block.getId(), block);
+            if (block == null) {
+                continue;
+            }
+
+            blocksByServiceMap
+                    .computeIfAbsent(block.getServiceId(), k -> new ConcurrentHashMap<>())
+                    .put(block.getId(), block);
         }
 
         return blocksByServiceMap;
