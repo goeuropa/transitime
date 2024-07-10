@@ -803,4 +803,3 @@ public class Reports {
         return json.length() > 50;
     }
 }
-

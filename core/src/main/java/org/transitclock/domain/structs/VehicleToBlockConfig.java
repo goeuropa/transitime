@@ -8,9 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicUpdate;
 import org.transitclock.Core;
-import org.transitclock.core.BlockAssignmentMethod;
-import org.transitclock.core.VehicleState;
-import org.transitclock.core.dataCache.VehicleStateManager;
+import org.transitclock.service.CommandsServiceImpl;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -125,15 +123,12 @@ public class VehicleToBlockConfig implements Serializable {
 
         Transaction transaction = session.beginTransaction();
         try {
-            session
-                    .createMutationQuery("delete from VehicleToBlockConfig where id = :id")
+            session.createMutationQuery("delete from VehicleToBlockConfig where id = :id")
                     .setParameter("id", id)
                     .executeUpdate();
             transaction.commit();
-            VehicleState vehicleState = VehicleStateManager.getInstance()
-                    .getVehicleState(vehicleId);
-            vehicleState.unsetBlock(BlockAssignmentMethod.ASSIGNMENT_TERMINATED);
-            vehicleState.setMatch(null);
+            //Reset vehicle
+            CommandsServiceImpl.instance().setVehicleUnpredictable(vehicleId);
         } catch (Throwable t) {
             transaction.rollback();
             throw t;

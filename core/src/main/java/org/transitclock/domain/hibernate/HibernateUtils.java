@@ -2,6 +2,7 @@
 package org.transitclock.domain.hibernate;
 
 import lombok.Synchronized;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -9,6 +10,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.procedure.ProcedureCall;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.service.ServiceRegistry;
 import org.transitclock.config.data.DbSetupConfig;
 
@@ -58,7 +61,7 @@ public class HibernateUtils {
         // Add the annotated classes so that they can be used
         AnnotatedClassesList.addAnnotatedClasses(config);
 
-        // Set the db info for the URL, user name, and password. Uses the
+        // Set the db info for the URL, username, and password. Uses the
         // property hibernate.connection.url if it is set so that everything
         // can be overwritten in a standard way. If that property not set then
         // uses values from DbSetupConfig if set. If they are not set then the
@@ -163,6 +166,11 @@ public class HibernateUtils {
      * the newly configured timezone, and then successfully process dates.
      */
     public static void clearSessionFactory() {
+        sessionFactoryCache.forEach((s, sessionFactory) -> {
+            if(sessionFactory.isOpen()) {
+                sessionFactory.close();
+            }
+        });
         sessionFactoryCache.clear();
     }
 
@@ -205,20 +213,58 @@ public class HibernateUtils {
 
     @Synchronized
     public static Session getSession(boolean readOnly) {
-        Thread currentThread = Thread.currentThread();
-        ThreadLocal<Session> threadSession = threadSessions.get(currentThread);
-        if (threadSession == null || threadSession.get() == null || !threadSession.get().isOpen()) {
-            if(threadSession != null && threadSession.get() != null) {
-                threadSession.get().close();
-                threadSession.remove();
-            }
-            SessionFactory sessionFactory = HibernateUtils.getSessionFactory(DbSetupConfig.getDbName(), readOnly);
-            if (threadSession == null)
-                threadSessions.put(currentThread, ThreadLocal.withInitial(sessionFactory::openSession));
-            else
-                threadSession.set(sessionFactory.openSession());
+        return threadSessions
+                .compute(Thread.currentThread(), (t, s) -> {
+                    String dbName = DbSetupConfig.getDbName();
+                    if (s == null) {
+                        ThreadLocal<Session> sessionThreadLocal = new ThreadLocal<>();
+                        sessionThreadLocal.set(ContextAwareSession.create(getSessionFactory(dbName, readOnly)));
+                        return sessionThreadLocal;
+                    }
+
+                    Session session = s.get();
+                    if (!session.isOpen() || session.isDefaultReadOnly() != readOnly) {
+                        s.set(ContextAwareSession.create(getSessionFactory(dbName, readOnly)));
+                    }
+
+                    return s;
+                })
+                .get();
+    }
+
+
+    private static class ContextAwareSession implements Session {
+        @Delegate
+        private final Session session;
+        private final Thread thread;
+
+        public static ContextAwareSession create(SessionFactory sessionFactory) {
+            return new ContextAwareSession(sessionFactory.openSession(), Thread.currentThread());
         }
 
-        return threadSessions.get(currentThread).get();
+        public ContextAwareSession(Session session, Thread thread) {
+            this.session = session;
+            this.thread = thread;
+        }
+
+        public Thread getContext() {
+            return thread;
+        }
+
+        @Override
+        public void close() throws HibernateException {
+            session.close();
+            threadSessions.remove(thread);
+        }
+
+        @Override
+        public NativeQuery createNativeQuery(String sqlString, Class resultClass) {
+            return session.createNativeQuery(sqlString, resultClass);
+        }
+
+        @Override
+        public ProcedureCall createStoredProcedureQuery(String procedureName, Class... resultClasses) {
+            return session.createStoredProcedureQuery(procedureName, resultClasses);
+        }
     }
 }

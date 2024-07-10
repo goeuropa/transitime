@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: transitclock
-      POSTGRES_DB: STPT
+      POSTGRES_DB: transitclock
     ports:
       - "5432:5432"
   gtfsrt-validator:
@@ -13,21 +13,22 @@ services:
     ports:
       - "9090:8080"
   transitclock:
-    image: otrro/transitclock-server:latest
+    image: wkulesza/transitclock-server:latest
     depends_on:
       - db
     environment:
-      AGENCYID: ro.stpt
-      AGENCYNAME: STPT
-      TZ: "Europe/Bucharest"
-      GTFS_URL: https://data.opentransport.ro/routing/gtfs/gtfs-stpt.zip
-      GTFSRTVEHICLEPOSITIONS: https://api.opentransport.ro/exporter/v1/realtime/stpt/vehicle-positions
+      AGENCYID: ID
+      AGENCYNAME: transitclock
+      TZ: "Europe/Warsaw"
+      GTFS_URL: https://example/gtfs.zip
+      GTFSRTVEHICLEPOSITIONS: https://api.example
       PGPASSWORD: transitclock
       POSTGRES_PORT_5432_TCP_ADDR: db
       POSTGRES_PORT_5432_TCP_PORT: 5432
-
+    volumes:
+      - ./transitclock.properties:/app/config/transitclock.properties
     ports:
       - "8080:8080"
     command:
       - --gtfs-url
-      - https://data.opentransport.ro/routing/gtfs/gtfs-stpt.zip
+      - https://example/gtfs.zip
